@@ -29,6 +29,20 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     return checkInOnSameDate
   }
 
+  async findManyByUserId(userId: string, page: number) {
+    return this.items
+      .filter((item) => item.user_id === userId) // filtra os check-ins do usuário
+      .slice((page - 1) * 20, page * 20) // aplica a paginação
+    // aqui é feita a paginação dos check-ins. ou seja, a lógica é
+    // baseada no número da página. se a página for 1, o cálculo será:
+    // (1 - 1) * 20 = 0, então vai começar no item 0, e irá até o item 20 (page * 20).
+    // ou seja, para a página 1, vai do check-in 1 ao 20. se a página for 2, o cálculo é:
+    // (2 - 1) * 20 = 20, então começa do item 20 até o item 40 (page * 20).
+    // isso faz com que, ao mudar de página, a lista mostre o intervalo correto de 20 check-ins por vez.
+    // basicamente, você está mostrando 20 check-ins por página e, conforme o número da página,
+    // o código ajusta a posição inicial e final dos itens.
+  }
+
   async create(data: Prisma.CheckInUncheckedCreateInput) {
     const checkIn = {
       id: randomUUID(),
