@@ -43,6 +43,10 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     // o código ajusta a posição inicial e final dos itens.
   }
 
+  async countByUserId(userId: string) {
+    return this.items.filter((item) => item.user_id === userId).length
+  }
+
   async create(data: Prisma.CheckInUncheckedCreateInput) {
     const checkIn = {
       id: randomUUID(),
