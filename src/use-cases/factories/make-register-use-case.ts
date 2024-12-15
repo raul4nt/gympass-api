@@ -3,9 +3,9 @@ import { RegisterUseCase } from '../register'
 
 export function makeRegisterUseCase() {
   const usersRepository = new PrismaUsersRepository()
-  const registerUseCase = new RegisterUseCase(usersRepository)
+  const useCase = new RegisterUseCase(usersRepository)
 
-  return registerUseCase
+  return useCase
   // factorie = centralizador de criação do nosso use case
   // neste caso tenho apenas uma dependencia só(usersrepository),
   // mas quanto mais dependencias eu tenho, mais chato seria pra importar cada uma
