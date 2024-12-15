@@ -6,6 +6,16 @@ import dayjs from 'dayjs'
 export class InMemoryCheckInsRepository implements CheckInsRepository {
   public items: CheckIn[] = []
 
+  async findById(id: string) {
+    const checkIn = this.items.find((item) => item.id === id)
+
+    if (!checkIn) {
+      return null
+    }
+
+    return checkIn
+  }
+
   async findByUserIdOnDate(userId: string, date: Date) {
     const startOfTheDay = dayjs(date).startOf('date')
     // 2023-02-28...hora...
@@ -58,6 +68,21 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     }
 
     this.items.push(checkIn)
+
+    return checkIn
+  }
+
+  async save(checkIn: CheckIn) {
+    const checkInIndex = this.items.findIndex((item) => item.id === checkIn.id)
+    // método findIndex procura o index do item no array, e, se nao achar, retorna -1
+    // se achar, retorna o index dele
+
+    if (checkInIndex >= 0) {
+      // por isso aqui validamos assim: se for >= 0, significa que nao é -1, ou seja,
+      // achou e retornou o index corretamente
+      this.items[checkInIndex] = checkIn
+      // substituo o check-in "antigo" pelo check-in atualizado
+    }
 
     return checkIn
   }
