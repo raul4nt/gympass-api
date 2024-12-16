@@ -17,9 +17,28 @@ export async function authenticate(
   try {
     const authenticateUseCase = makeAuthenticateUseCase()
 
-    await authenticateUseCase.execute({
+    const { user } = await authenticateUseCase.execute({
       email,
       password,
+    })
+
+    const token = await reply.jwtSign(
+      {},
+      {
+        sign: {
+          sub: user.id,
+        },
+      },
+    )
+
+    // esse jwtsign é o que faz a gente logar, basicamente
+    // estamos passando no payload como 'sub" o user_id do usuário
+    // pra conseguirmos identificar ele entre as requisições(saber
+    // quem está logado)
+    // isso gera um token pro nosso usuário caso a senha e email estejam corretos
+
+    return reply.status(200).send({
+      token,
     })
   } catch (err) {
     if (err instanceof InvalidCredentialsError) {
@@ -28,6 +47,4 @@ export async function authenticate(
 
     throw err
   }
-
-  return reply.status(200).send()
 }
