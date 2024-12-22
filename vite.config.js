@@ -7,5 +7,9 @@ export default defineConfig({
   // no ts config, de usar aliases(o @ aquele pra caminhos enormes)
   test: {
     environmentMatchGlobs: [['src/http/controllers/**', 'prisma']],
+    // configurando o test environment. colocamos onde estao estes destes
+    // (estao nos controllers), e aquele prisma ali é tudo o que vem depois
+    // de test-environment-(alguma coisa). a nossa pasta é test-environment-prisma,
+    // entao ali coloquei prisma, q é oq vem depois
   },
 })
