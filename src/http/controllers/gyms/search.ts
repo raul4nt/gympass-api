@@ -10,7 +10,7 @@ export async function search(request: FastifyRequest, reply: FastifyReply) {
     // um, e se nao vier numero nenhum o default é 1
   })
 
-  const { q, page } = searchGymsQuerySchema.parse(request.body)
+  const { q, page } = searchGymsQuerySchema.parse(request.query)
 
   const searchGymsUseCase = makeSearchGymsUseCase()
 
