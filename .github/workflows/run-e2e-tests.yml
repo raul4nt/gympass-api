@@ -1,0 +1,44 @@
+# Nome da ação que será executada no GitHub Actions
+name: Run E2E Tests
+
+# Definindo o gatilho para rodar a ação: sempre que um pull request for feito no repositório
+on: [pull_request]
+
+# Definindo o trabalho (job) que será executado
+jobs:
+  # Nome do trabalho (job) que vai rodar os testes E2E
+  run-e2e-tests:
+    name: Run E2E Tests  # Nome visível do trabalho
+    runs-on: ubuntu-latest  # Especifica o sistema operacional (Ubuntu) onde o trabalho vai rodar
+
+    # Definindo serviços que o trabalho vai usar (exemplo: banco de dados)
+    services:
+      # Serviço de banco de dados PostgreSQL
+      postgres:
+        image: bitnami/postgresql  # Usar a imagem Docker do PostgreSQL fornecida pela Bitnami
+        ports:
+          - 5432:5432  # Mapear a porta 5432 do container para a mesma porta na máquina host
+        env:  # Definir variáveis de ambiente necessárias para o serviço de banco de dados
+          POSTGRESQL_USERNAME: docker  # Nome de usuário para conectar no banco de dados
+          POSTGRESQL_PASSWORD: docker  # Senha de usuário para conectar no banco de dados
+          POSTGRESQL_DATABASE: apisolid  # Nome do banco de dados que será criado
+
+    # Passos (steps) que o GitHub Actions vai seguir para executar o trabalho
+    steps:
+      # Passo 1: Baixar o código do repositório
+      - uses: actions/checkout@v3  # Ação para pegar o código mais recente do repositório
+
+      # Passo 2: Preparar o ambiente com o Node.js versão 18
+      - uses: actions/setup-node@v3  # Usar a ação oficial para configurar o Node.js
+        with:
+          node-version: 18  # Especificar a versão do Node.js que será usada
+          cache: 'npm'  # Usar cache para as dependências npm, para acelerar os próximos builds
+
+      # Passo 3: Instalar as dependências do projeto
+      - run: npm ci  # Executa o comando 'npm ci', que instala as dependências de maneira limpa
+
+      # Passo 4: Rodar os testes E2E do projeto
+      - run: npm run test:e2e  # Executa os testes E2E configurados no script 'test:e2e' do package.json
+        env:  # Definir variáveis de ambiente para o ambiente de testes
+          JWT_SECRET: testing  # Definir o segredo do JWT (necessário para autenticação nos testes)
+          DATABASE_URL: "postgresql://docker:docker@localhost:5432/apisolid?schema=public"  # URL para conectar ao banco de dados PostgreSQL configurado no serviço
