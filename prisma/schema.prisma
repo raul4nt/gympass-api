@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  ADMIN
+  MEMBER
+}
+
 model User {
   // @@mapp: definindo o nome da tabela com users ao inves de User
   // @@ = config de tabela, @ = config de campo
@@ -14,6 +19,7 @@ model User {
   name          String
   email         String   @unique
   password_hash String
+  role          Role     @default(MEMBER)
   created_at    DateTime @default(now())
 
   checkIns CheckIn[]

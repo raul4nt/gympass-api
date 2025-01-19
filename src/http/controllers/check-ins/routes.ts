@@ -5,6 +5,7 @@ import { history } from './history'
 import { metrics } from './metrics'
 import { verifyJWT } from '@/http/middlewares/verify-jwt'
 import { create } from './create'
+import { verifyUserRole } from '@/http/middlewares/verify-user-role'
 
 export async function checkInsRoutes(app: FastifyInstance) {
   app.addHook('onRequest', verifyJWT)
@@ -16,6 +17,10 @@ export async function checkInsRoutes(app: FastifyInstance) {
   app.post('/gyms/:gymId/check-ins', create)
   // iremos passar o gymId pelo query params(pela rota)
 
-  app.patch('/check-ins/:checkInId/validate', validate)
+  app.patch(
+    '/check-ins/:checkInId/validate',
+    { onRequest: [verifyUserRole('ADMIN')] },
+    validate,
+  )
   // iremos passar o checkInId pelo query params(pela rota)
 }

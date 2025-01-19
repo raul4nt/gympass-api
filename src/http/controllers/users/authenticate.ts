@@ -23,7 +23,10 @@ export async function authenticate(
     })
 
     const token = await reply.jwtSign(
-      {},
+      {
+        role: user.role,
+        // salvando no payload o role do usuario logado
+      },
       {
         sign: {
           sub: user.id,
@@ -37,7 +40,10 @@ export async function authenticate(
     // isso gera um token pro nosso usuário caso a senha e email estejam corretos
 
     const refreshToken = await reply.jwtSign(
-      {},
+      {
+        role: user.role,
+        // salvando no payload o role do usuario logado(refreshtoken)
+      },
       {
         sign: {
           sub: user.id,
