@@ -26,12 +26,12 @@ jobs:
     # Passos (steps) que o GitHub Actions vai seguir para executar o trabalho
     steps:
       # Passo 1: Baixar o código do repositório
-      - uses: actions/checkout@v3  # Ação para pegar o código mais recente do repositório
+      - uses: actions/checkout@v4  # Ação para pegar o código mais recente do repositório
 
       # Passo 2: Preparar o ambiente com o Node.js versão 18
-      - uses: actions/setup-node@v3  # Usar a ação oficial para configurar o Node.js
+      - uses: actions/setup-node@v4  # Usar a ação oficial para configurar o Node.js
         with:
-          node-version: 18  # Especificar a versão do Node.js que será usada
+          node-version: 20  # Especificar a versão do Node.js que será usada
           cache: 'npm'  # Usar cache para as dependências npm, para acelerar os próximos builds
 
       # Passo 3: Instalar as dependências do projeto
